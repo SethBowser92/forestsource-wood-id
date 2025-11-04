@@ -1,0 +1,21 @@
+# node / next
+.next/
+dist/
+node_modules/
+out/
+
+# python
+__pycache__/
+*.pyc
+
+# artifacts
+*.onnx
+*.pt
+*.pth
+train_log.csv
+tb/
+
+# env
+.env
+.env.local
+.env.*.local

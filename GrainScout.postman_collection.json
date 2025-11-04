@@ -1,0 +1,366 @@
+{
+  "info": {
+    "name": "GrainScout API",
+    "_postman_id": "grainscout-collection",
+    "description": "GrainScout (Wood ID by ForestSource) \u2014 API routes for web app, admin importer, and webhook.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Identify",
+      "item": [
+        {
+          "name": "POST /api/identify (client \u2192 edge function)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/identify",
+              "host": [
+                "{{baseUrl}}/api/identify"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "POST /api/identify (client \u2192 edge function)_tests",
+                "exec": [
+                  "pm.test(\"Status is 200/201/202/304/418/402\", function () { pm.expect([200,201,202,304,418,402]).to.include(pm.response.code); });",
+                  "pm.test(\"Has predictions or quota\", function () { var j=pm.response.json(); pm.expect(j.predictions || j.error).to.exist; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST Supabase Edge identify-wood (direct)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{supabaseAnon}}"
+              }
+            ],
+            "url": {
+              "raw": "{{supabaseFunctionIdentify}}",
+              "host": [
+                "{{supabaseFunctionIdentify}}"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "GET /api/subscription/status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/subscription/status",
+              "host": [
+                "{{baseUrl}}/api/subscription/status"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "GET /api/subscription/status_tests",
+                "exec": [
+                  "pm.test(\"Status 200\", ()=> pm.response.to.have.status(200));",
+                  "pm.test(\"Has plan/status\", ()=> { let j=pm.response.json(); pm.expect(j.plan).to.exist; pm.expect(j.status).to.exist; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/create-checkout-session?plan=monthly",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/create-checkout-session?plan=monthly",
+              "host": [
+                "{{baseUrl}}/api/create-checkout-session?plan=monthly"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "POST /api/create-checkout-session?plan=monthly_tests",
+                "exec": [
+                  "pm.test(\"Status 200\", ()=> pm.response.to.have.status(200));",
+                  "pm.test(\"URL present\", ()=> { let j=pm.response.json(); pm.expect(j.url).to.match(/^https:\\/\\/checkout.stripe.com/); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/create-checkout-session?plan=annual",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/create-checkout-session?plan=annual",
+              "host": [
+                "{{baseUrl}}/api/create-checkout-session?plan=annual"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/create-portal-session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/create-portal-session",
+              "host": [
+                "{{baseUrl}}/api/create-portal-session"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', ()=> pm.response.to.have.status(200));",
+                  "pm.test('Has URL', ()=> { let j=pm.response.json(); pm.expect(j.url).to.match(/^https:\\/\\//); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin \u00b7 Airtable Import",
+      "item": [
+        {
+          "name": "GET /api/admin/list-airtable?recordId=recXXXX",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/list-airtable?recordId=recXXXX",
+              "host": [
+                "{{baseUrl}}/api/admin/list-airtable?recordId=recXXXX"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/admin/import-airtable",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/import-airtable",
+              "host": [
+                "{{baseUrl}}/api/admin/import-airtable"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"recordId\": \"recXXXX\"}"
+            }
+          }
+        },
+        {
+          "name": "GET /api/admin/aliases",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/aliases",
+              "host": [
+                "{{baseUrl}}/api/admin/aliases"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /api/admin/aliases",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/aliases",
+              "host": [
+                "{{baseUrl}}/api/admin/aliases"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"alias\": \"red oak\", \"species_id\": \"quercus_rubra\"}"
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/admin/aliases?alias=...",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/admin/aliases?alias=red%20oak",
+              "host": [
+                "{{baseUrl}}/api/admin/aliases?alias=red%20oak"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stripe Webhook (manual replay)",
+      "item": [
+        {
+          "name": "POST /api/stripe-webhook (mock payload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "stripe-signature",
+                "value": "<sig-from-stripe-cli-or-leave-empty>"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/stripe-webhook",
+              "host": [
+                "{{baseUrl}}/api/stripe-webhook"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"evt_test_webhook\",\n  \"object\": \"event\",\n  \"type\": \"checkout.session.completed\",\n  \"data\": {\n    \"object\": {\n      \"object\": \"checkout.session\",\n      \"customer\": \"cus_test\",\n      \"expires_at\": 1730500000\n    }\n  }\n}"
+            }
+          }
+        }
+      ],
+      "description": "Prefer Stripe CLI for signed events:\nstripe listen --forward-to localhost:3000/api/stripe-webhook\nstripe trigger checkout.session.completed"
+    },
+    {
+      "name": "Feedback",
+      "item": [
+        {
+          "name": "POST /api/feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/feedback",
+              "host": [
+                "{{baseUrl}}/api/feedback"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"identification_id\": 123, \"sha256\": \"<sha>\", \"was_correct\": false, \"correct_species_id\": \"quercus_rubra\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Species Similar",
+      "item": [
+        {
+          "name": "GET /api/species/similar?id=quercus_rubra",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/species/similar?id=quercus_rubra",
+              "host": [
+                "{{baseUrl}}/api/species/similar?id=quercus_rubra"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Images",
+      "item": [
+        {
+          "name": "POST /api/images/report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/images/report",
+              "host": [
+                "{{baseUrl}}/api/images/report"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id\": 1, \"reason\": \"user_report\"}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

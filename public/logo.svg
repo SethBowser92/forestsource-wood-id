@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 60">
+  <defs>
+    <style>
+      .mark { fill: none; stroke: #000; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .type { font: 700 24px system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    </style>
+  </defs>
+  <g>
+    <!-- GS monogram / grain rings -->
+    <circle class="mark" cx="30" cy="30" r="22"/>
+    <path class="mark" d="M12 30h18v12c0 8 18 8 18 0 0-14-10-24-24-24"/>
+    <text class="type" x="70" y="38">GrainScout</text>
+  </g>
+</svg>
