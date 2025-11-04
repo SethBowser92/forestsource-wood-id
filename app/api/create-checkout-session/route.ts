@@ -13,7 +13,7 @@ export async function POST(req: NextRequest){
     return NextResponse.json({ error: 'Stripe/Supabase not configured' }, { status: 500 })
   const { searchParams } = new URL(req.url)
   const plan = searchParams.get('plan') === 'annual' ? 'annual' : 'monthly'
-  const stripe = new Stripe(stripeSecret, { apiVersion: '2024-06-20' })
+  const stripe = new Stripe(stripeSecret, { apiVersion: '2023-10-16' })
   const supabase = createRouteHandlerClient({ cookies })
   const { data: { user } } = await supabase.auth.getUser()
   let customerId: string | undefined

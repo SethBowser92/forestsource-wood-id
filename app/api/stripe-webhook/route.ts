@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const sig = req.headers.get('stripe-signature');
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!sig || !secret) return NextResponse.json({ error: 'No signature' }, { status: 400 });
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' });
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' });
   let event: Stripe.Event;
   try { event = stripe.webhooks.constructEvent(buf, sig, secret); }
   catch (err: any) { return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 }); }

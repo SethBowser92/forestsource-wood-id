@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import UploadBox from '@/components/UploadBox'
 import ResultCard from '@/components/ResultCard'
 import PaywallBanner from '@/components/PaywallBanner'

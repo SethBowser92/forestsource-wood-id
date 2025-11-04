@@ -51,12 +51,11 @@ export default async function SpeciesPage({ params }:{ params:{ id:string }}) {
             <h4 className="font-semibold mb-2">Leaves</h4>
             <ImageGrid items={leaves} />
           </div>
-        
+        </div>
       </div>
       <div className="card">
         <h3 className="font-semibold mb-3">Similar species</h3>
         {/* Server-side fetch to our API for now */}
-        {/* @ts-expect-error Async Server Component */}
         <SimilarList id={sp?.id ?? params.id} />
       </div>
     </div>

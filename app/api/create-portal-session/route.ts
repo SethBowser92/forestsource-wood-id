@@ -13,7 +13,7 @@ export async function POST(){
   const SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY!
   if (!stripeSecret || !SUPABASE_URL || !SERVICE) return NextResponse.json({ error: 'Server not configured' }, { status: 500 })
 
-  const stripe = new Stripe(stripeSecret, { apiVersion: '2024-06-20' })
+  const stripe = new Stripe(stripeSecret, { apiVersion: '2023-10-16' })
   const supabase = createRouteHandlerClient({ cookies })
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Not signed in' }, { status: 401 })
